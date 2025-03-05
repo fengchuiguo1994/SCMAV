@@ -1,8 +1,9 @@
 # SCMAV
-single-cell multi-omic analysis and visualization tools
+single-cell multi-omic analysis and visualization tools. SCMAV contain a ChAIR-PIPEv2, ChIA-PIPEv2, ChAIR-View (shiny version and local version), basic browser and Hi-C-PIPE.
 
-## ChAIR-PIPE
+## ChAIR library
 ![](img/tech.png)
+Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells.
 
 ## ChAIR-data
 ChAIR data contain two library data (DNA and cDNA). 
