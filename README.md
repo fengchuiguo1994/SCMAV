@@ -3,10 +3,10 @@ single-cell multi-omic analysis and visualization tools. SCMAV contain a ChAIR-P
 
 ## ChAIR library
 ![](img/tech.png)
-Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells.
+Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (DNA and cDNA). 
 
-## ChAIR-data
-ChAIR data contain two library data (DNA and cDNA). 
+## ChAIR-PIPEv2
+
 ChiaV2 is a packaged version of the [ChIA-PIPE workflow](https://github.com/TheJacksonLaboratory/ChIA-PIPE), which eliminates the hassle of software installation. <br/>
 **DockerHub Link: https://hub.docker.com/r/fengchuiguo1994/chiav2/tags**
 
