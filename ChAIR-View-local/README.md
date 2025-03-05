@@ -1,155 +1,63 @@
-# SCMAV
-single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>ChAIR-PIPEv2</strong>, <strong>ChIA-PIPEv2</strong>, <strong>ChAIR-View (shiny version and local version)</strong> and <strong>basic browser</strong>.
+# ChAIR-Viewer
+Visualization for single-cell multi-omic data
 
-## ChAIR library
-![](img/tech.png)
-Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (DNA and cDNA). 
 
-## ChAIR-PIPEv2
-ChAIR-PIPEv2 eliminates the hassle of software installation. <br/>
-**DockerHub Link: [https://hub.docker.com/repository/docker/fengchuiguo1994/scmav:tagsname](https://hub.docker.com/repository/docker/fengchuiguo1994/scmav)
+ChAIR-Viewer is developped for visualization single-cell multi-omic data. For ensemble data: bedgraph file (coverage signal), bedpe file (loop), bed file (peak/chromhmm/gene annotation) and more. For single cell data: fragment file. ChAIR-Viewer provides a variety of ways to sort cell, including: sorted by RNA UMI count, sorted by ATAC fragment count, sorted by contact/PET count, sorted by maximum contact distance, ordered of hierarchical clustering (in RNA/ATAC/PET data) and more.
 
-##  [System Requirements](https://sylabs.io/guides/3.8/admin-guide/installation.html)
-####  Hardware
-ChAIR-PIPEv2 should be run on a Linux system that meets the following requirements:
-* 4-core Intel or AMD processor (>12 cores recommended)
-* 64GB RAM (>256GB recommended)
-* 64-bit CentOS/RedHat 7.8 or Ubuntu 20.04
-
-###   Software
-* Singularity: a container platform, >=3.8
-
-####   Quick installation of Singularity
+ChAIR-Viewer is developped by R, some package are needed.
 ```
-## On Red Hat Enterprise Linux or CentOS install the following dependencies:
-$ sudo yum update -y && \
-     sudo yum groupinstall -y 'Development Tools' && \
-     sudo yum install -y \
-     openssl-devel \
-     libuuid-devel \
-     libseccomp-devel \
-     wget \
-     squashfs-tools \
-     cryptsetup
-
-## On Ubuntu or Debian install the following dependencies:
-$ sudo apt-get update && sudo apt-get install -y \
-    build-essential \
-    uuid-dev \
-    libgpgme-dev \
-    squashfs-tools \
-    libseccomp-dev \
-    wget \
-    pkg-config \
-    git \
-    cryptsetup-bin
-
-## Install Go
-$ export VERSION=1.14.12 OS=linux ARCH=amd64 && \
-    wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
-    sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
-    rm go$VERSION.$OS-$ARCH.tar.gz
-
-$ echo 'export GOPATH=${HOME}/go' >> ~/.bashrc && \
-    echo 'export PATH=/usr/local/go/bin:${PATH}:${GOPATH}/bin' >> ~/.bashrc && \
-    source ~/.bashrc
-
-## Install singularity on CentOS without compile
-$ yum install -y singularity
+RColorBrewer
+pheatmap
+plotrix
+dplyr
+GenomicRanges
+ggpubr
+ggplot2
+patchwork
 ```
 
-####   Quick download chiaV2 from DockerHub
-You can download chiav2 by running the following command:
+# USAGE
+#### 1. Only the two longest and two exon most transcripts are retained (Convenient output of gene annotation track) (Optional)
 ```
-singularity build chiav2.sif docker://fengchuiguo1994/chiav2:1.0
-singularity build chiav2.sif docker://docker.awsl9527.cn/fengchuiguo1994/chiav2:1.0
+python getMaxlengthRNA.py ~/cellranger-7.1.0/genome/refdata-gex-mm10-2020-A/genes/genes.gtf | grep -v "^#" | awk '$3=="exon" || $3=="UTR"'|perl -lane '$id="#";$id=$1 if(/transcript_id "(.+?)"/);$name="#"; $name=$1 if(/gene_name "(.+?)"/); print "$F[0]\t".($F[3]-1)."\t$F[4]\t$id\t$name\t0\t$F[6]\t$F[2]"' > mm10.genome.max.bed
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-####  Introduction
-ChAIR-PIPEv2 processes the sequencing data (ChAIR) to generate single-cell contact, ATAC fragment, peak count matrix, gene expression matrix ......, bulk-cell contact matrix, chromatin loops, coverage signal, peak ...... . ChAIR-PIPEv2 includes linker calling, mapping, duplicate removing, loop calling and more functions.
-
-
-
-
-### Usage
-A ChIATAC demo data from mice was provided.
+else
 ```
-# 1. Prepare genome
-wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M35/GRCm39.genome.fa.gz
-gunzip GRCm39.genome.fa.gz
-singularity run chiav2.sif bwa index GRCm39.genome.fa
-
-# 2. Modify the information in the config file.
-
-# 3. Execute program.
-bash run.chiaV2.sh chiaV2.config.sh ${PWD}/demoData/ChIATACdata/SCG0192 result # abspath
-chiaV2.config.sh: config file
-${PWD}/demoData/ChIATACdata/SCG0192: the prefix of the input fastq data, must be absolute path
-result: output dir
+cat ~/cellranger-7.1.0/genome/refdata-gex-mm10-2020-A/genes/genes.gtf | grep -v "^#" | awk '$3=="exon" || $3=="UTR"'|perl -lane '$id="#";$id=$1 if(/transcript_id "(.+?)"/);$name="#"; $name=$1 if(/gene_name "(.+?)"/); print "$F[0]\t".($F[3]-1)."\t$F[4]\t$id\t$name\t0\t$F[6]\t$F[2]"' > mm10.genome.max.bed
 ```
 
-###   Example result
-| file name | description |
-| ----------- | ----------- |
-| *.narrowPeak | DNA binding region (like ChIPSeq) |
-| *.treat_pileup.NDP.bw | coverage signal (like ChIPSeq) |
-| *.hic | contact matrix (Visualization in [juicer-box](https://aidenlab.org/juicebox/))|
-| *.BE2.sigf.interactions | chromatin loops |
-| *.final_stats.tsv | result report |
-
-
-# Hi-C pipeline
-
-Hi-C pipeline is a packaged workflow that works for chromatin interaction data, which eliminates the hassle of software installation. <br/>
-**DockerHub Link: https://hub.docker.com/r/fengchuiguo1994/chiav2/tags**
-
-##  Introduction
-Hi-C pipeline processes the sequencing data of chromation interactions to generate chromatin loops and contact matrix. Hi-C pipeline includes mapping, duplicate removing, pairing. chiaV2.sif also contain the software for Hi-C analysis.
-
-
-### Usage
-A Hi-C demo data from mice was provided.
+#### 2. Prepare all data (Convenient for multiple calls)
+The readInfo.R script is used to organize the input files, and needs to be modified by the user according to your actual situation.
 ```
-# 1. Prepare genome
-wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_mouse/release_M35/GRCm39.genome.fa.gz
-gunzip GRCm39.genome.fa.gz
-singularity run chiav2.sif bwa index GRCm39.genome.fa
+mkdir alldata
+Rscript readInfo.R mm10.genome.max.bed mouseBrain mouseBrain.chromstat.hmm.bed
+```
+The program searches the current directory for the following files and stores all results as an RData object.
 
-# 2. Modify the information in the config file.
+file|description
+:---:|:---:
+mouseBrain.clean.ATAC.mouseBrain.fragments.unsorted.tsv|scATAC fragment file
+mouseBrain.clean.ATAC.mouseBrain.q001_peaks.final.bed|peak file (3 columns)
+mouseBrain.clean.ATAC.mouseBrain.bedgraph|scATAC coverage signal
+mouseBrain.clean.ATAC.mouseBrain.RPKM.bedgraph|scATAC coverage signal by using RPKM normalization
+mouseBrain.clean.PET.bedpe.mouseBrain.bedpe|scPET file (11 columns: chrom1, start1, end1, chrom2, start2, end2, barcode, readID, score, strand1, strand2)
+mouseBrain.clean.PET.bedpe.mouseBrain.clusters.bedpe|loop file (no given anchor model) (7 columns: chrom1, start1, end1, chrom2, start2, end2, contact count)
+mouseBrain.clean.PET.bedpe.mouseBrain.clusters.twopeaks.bedpe|loop file (no given anchor model) (overlap with peak) (7 columns: chrom1, start1, end1, chrom2, start2, end2, contact count)
+mouseBrain.clean.PET.bedpe.mouseBrain.bedpe.ipet.loops|loop file ( given anchor model) (10 columns: chrom1, start1, end1, chrom2, start2, end2, contact count, anchor1 coverage, anchor2 coverage, VC_sqrt score)
+mouseBrain.clean.GEX.mouseBrain.bedgraph|scRNA coverage signal
+mouseBrain.clean.GEX.mouseBrain.RPKM.bedgraph|scRNA coverage signal by using RPKM normalization
+mouseBrain.clean.dup.GEX.mouseBrain.bedgraph|scRNA (contain mapped reads from intergenic) coverage signal. (If there is no mouseBrain.clean.dup.GEX.mouseBrain.bedgraph file, you can copy the mouseBrain.clean.GEX.mouseBrain.bedgraph file)
+mouseBrain.clean.dup.GEX.mouseBrain.RPKM.bedgraph|scRNA (contain mapped reads from intergenic) coverage signal by using RPKM normalization. (If there is no mouseBrain.clean.dup.GEX.mouseBrain.RPKM.bedgraph file, you can copy the mouseBrain.clean.GEX.mouseBrain.RPKM.bedgraph file)
+mouseBrain.clean.GEX.mouseBrain.fragments.unsorted.tsv|scRNA fragment file
+mouseBrain.clean.dup.GEX.mouseBrain.fragments.unsorted.tsv|scRNA (contain mapped reads from intergenic) fragment file. (If there is no mouseBrain.clean.dup.GEX.mouseBrain.fragments.unsorted.tsv file, you can copy the mouseBrain.clean.GEX.mouseBrain.fragments.unsorted.tsv file)
 
-# 3. Execute program.
-bash hic_pipeline.sh ${PWD}/demoData_hic/Bcell_hic ${PWD}/result # abspath
-${PWD}/demoData_hic/Bcell_hic: the prefix of the input fastq data, must be absolute path
-${PWD}/result: output dir, must be absolute path
+#### 3. plot
+```
+Rscript plotData.R
 ```
 
-###   Example result (in result folder)
-| file name | description |
-| ----------- | ----------- |
-| *.hic | contact matrix (Visualization in [juicer-box](https://aidenlab.org/juicebox/))|
-| *.flt1000.hic | contact matrix filtering cis contacts < 1kb (Visualization in [juicer-box](https://aidenlab.org/juicebox/))|
-| *.mapped.pairs.cut.gz | contact txt|
-| *.flt1000.mapped.pairs.cut.gz | contact txt filtering cis contacts < 1kb |
-| *.out.qc | result report |
+#### 4. The ChAIR-viewer version of shiny is will be finished soon. 
+
+# CONTACT
+黄加祥 (Jiaxiang Huang, 12207142@zju.edu.cn)<br/>
+黄星宇 (Xingyu Huang, xingyu.huang@zju.edu.cn/huang182@live.cn)<br/>

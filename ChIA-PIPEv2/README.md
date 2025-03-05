@@ -1,17 +1,14 @@
-# SCMAV
-single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>ChAIR-PIPEv2</strong>, <strong>ChIA-PIPEv2</strong>, <strong>ChAIR-View (shiny version and local version)</strong> and <strong>basic browser</strong>.
+# chiav2
 
-## ChAIR library
-![](img/tech.png)
-Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (DNA and cDNA). 
+ChiaV2 is a packaged version of the [ChIA-PIPE workflow](https://github.com/TheJacksonLaboratory/ChIA-PIPE), which eliminates the hassle of software installation. <br/>
+**DockerHub Link: https://hub.docker.com/r/fengchuiguo1994/chiav2/tags**
 
-## ChAIR-PIPEv2
-ChAIR-PIPEv2 eliminates the hassle of software installation. <br/>
-**DockerHub Link: [https://hub.docker.com/repository/docker/fengchuiguo1994/scmav:tagsname](https://hub.docker.com/repository/docker/fengchuiguo1994/scmav)
+##  Introduction
+chiav2 processes the sequencing data (ChIATAC/ChIA-PET/Bridge-linker Hi-C) to generate chromatin loops, coverage signal and contact matrix. chiaV2 includes linker calling, mapping, duplicate removing, loop calling. It also contain the software for Hi-C analysis.
 
 ##  [System Requirements](https://sylabs.io/guides/3.8/admin-guide/installation.html)
-####  Hardware
-ChAIR-PIPEv2 should be run on a Linux system that meets the following requirements:
+###   Hardware
+ChiaV2 should be run on a Linux system that meets the following requirements:
 * 4-core Intel or AMD processor (>12 cores recommended)
 * 64GB RAM (>256GB recommended)
 * 64-bit CentOS/RedHat 7.8 or Ubuntu 20.04
@@ -64,33 +61,6 @@ You can download chiav2 by running the following command:
 singularity build chiav2.sif docker://fengchuiguo1994/chiav2:1.0
 singularity build chiav2.sif docker://docker.awsl9527.cn/fengchuiguo1994/chiav2:1.0
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-####  Introduction
-ChAIR-PIPEv2 processes the sequencing data (ChAIR) to generate single-cell contact, ATAC fragment, peak count matrix, gene expression matrix ......, bulk-cell contact matrix, chromatin loops, coverage signal, peak ...... . ChAIR-PIPEv2 includes linker calling, mapping, duplicate removing, loop calling and more functions.
-
-
 
 
 ### Usage

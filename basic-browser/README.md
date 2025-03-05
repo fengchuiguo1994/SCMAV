@@ -1,56 +1,60 @@
-# new_basic_browser
-New basic browser manual
+## basic browser
+Basic browser manual
 
 ----------------------------
 
-## 1: Install
+## Install
 ```
 yum install docker
-yum install httpd
-yum install libcgroup
-yum install libcgroup-tools
-
-# cgcreate -g memory,cpu,blkio,cpuset:userlimited
-# cgconfigparser -l /etc/cgconfig.conf
+# yum install httpd
+# yum install libcgroup
+# yum install libcgroup-tools
 
 systemctl start docker.service
 systemctl enable docker.service
-systemctl start httpd.service
-systemctl enable httpd.service
-systemctl start cgconfig.service
-systemctl enable cgconfig.service
+# systemctl start httpd.service
+# systemctl enable httpd.service
+# systemctl start cgconfig.service
+# systemctl enable cgconfig.service
 
-cd basic_browser_working_2023-20230323T125235Z-001\basic_browser_working_2023
-docker build -t basic-browser . # need clone repositories from GitHub
-docker run  -d --rm --name basic-browser -p 8000:8000 -v mongodb:/data/db -v mysql:/var/lib/mysql  basic-browser
-docker exec -it basic-browser-testing /bin/bash
+docker build -t basic-browser . # building
+docker run -d --name basic-browser -p 8000:8000 -v mongodb:/data/db -v mysql:/var/lib/mysql  basic-browser # basic browser start
+
+docker exec -it basic-browser /bin/bash # enter basic browser (in docker)
 cd /opt/basic/
 _py/bin/python manage.py createsuperuser # give username, emall and password
 exit
-docker stop basic-browser
 
-docker run -d --name basic-browser -p 8000:8000 -v mongodb:/data/db -v mysql:/var/lib/mysql  basic-browser
+docker stop basic-browser # stop basic browser
+
 
 docker stop basic-browser 
 docker start basic-browser
 docker restart basic-browser
 ```
 
-## 2: Upload assembly
-```
-samtools faidx susScr11.fa
-cat mm39.fa.fai | grep -v chrUn | grep -v chrY_NW > susScr11.txt
-wget https://hgdownload.soe.ucsc.edu/goldenPath/susScr11/database/cytoBandIdeo.txt.gz
-zcat cytoBandIdeo.txt.gz |  grep -v chrUn | grep -v chrY_NW | awk 'BEGIN {FS="\t"}  {if( $1 !~ /'_'/) print $0 }' | awk 'BEGIN {FS="\t"; OFS="\t"}  {if( length($4) == 0) {$4=$4"q"}; print $1,$2,$3,$4,$5 }' | sed s'/cen\t/q\t/'g > susScr11.txt
+## Upload assembly
 
+```
+docker exec -it basic-browser /bin/bash # enter basic browser (in docker)
+cd /opt/basic/data/genome/size
+
+samtools faidx susScr11.fa
+cat susScr11.fa.fai | grep -v chrUn | grep -v chrY_NW > susScr11.txt
 samtools faidx mm39.fa
 cat mm39.fa.fai | grep -v random | grep -v  chrUn > mm39.txt
+cat bDroNov1.fa.fai | cut -f 1-2 > bDroNov1a.txt
+
+cd /opt/basic/data/genome/chrband
+
+wget https://hgdownload.soe.ucsc.edu/goldenPath/susScr11/database/cytoBandIdeo.txt.gz
+zcat cytoBandIdeo.txt.gz |  grep -v chrUn | grep -v chrY_NW | awk 'BEGIN {FS="\t"}  {if( $1 !~ /'_'/) print $0 }' | awk 'BEGIN {FS="\t"; OFS="\t"}  {if( length($4) == 0) {$4=$4"q"}; print $1,$2,$3,$4,$5 }' | sed s'/cen\t/q\t/'g > susScr11.txt
 wget https://hgdownload.soe.ucsc.edu/goldenPath/mm39/database/cytoBandIdeo.txt.gz
 zcat cytoBandIdeo.txt.gz | grep -v chrUn | grep -v random | awk 'BEGIN {FS="\t"}  {if( $1 !~ /'_'/) print $0 }' | awk 'BEGIN {FS="\t"; OFS="\t"}  {if( length($4) == 0) {$4=$4"q"}; print $1,$2,$3,$4,$5 }' | sed s'/cen\t/q\t/'g > mm39.txt
-docker restart basic-browser
+cat bDroNov1a.txt | awk -v OFS="\t" '{ print $1,0,$2,"q","gneg" }' > bDroNov1a.txt
 
-cat Tools/cellranger-7.1.0/genome/genome/bDroNov1/bDroNov1.fa.fai | cut -f 1-2 > bDroNov1a.txt
-cat bDroNov1a.txt | awk -v OFS="\t" '{ print $1,0,$2,"q","gneg" }' > bDroNov1a.cyto.txt
+exit # exit basic browser 
+docker restart basic-browser # restart
 ```
 
 ## 2: Upload gene annotation
