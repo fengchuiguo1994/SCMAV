@@ -1,5 +1,5 @@
 # SCMAV
-single-cell multi-omic analysis and visualization tools. SCMAV contain a ChAIR-PIPEv2, ChIA-PIPEv2, ChAIR-View (shiny version and local version), basic browser and Hi-C-PIPE.
+single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>ChAIR-PIPEv2</strong>, <strong>ChIA-PIPEv2</strong>, <strong>ChAIR-View (shiny version and local version)</strong>, <strong>basic browser</strong> and <strong>Hi-C-PIPE</strong>.
 
 ## ChAIR library
 ![](img/tech.png)
