@@ -5,7 +5,7 @@ Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in
 ## SCMAV
 single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>[ChAIR-PIPEv2](ChAIR-PIPEv2)</strong>, <strong>[ChIA-PIPEv2](ChIA-PIPEv2)</strong>, <strong>ChAIR-View ([shiny version](ChAIR-View-shiny) and [local version](ChAIR-View-local))</strong> and <strong>[basic browser](basic-browser)</strong>. <br/>
 
-The core components of data processing have been uploaded to DockerHub to avoid tedious software installation. <br/>
+The <strong>core components</strong> of data processing have been uploaded to DockerHub to avoid tedious software installation. <br/>
 **DockerHub Link: [https://hub.docker.com/repository/docker/fengchuiguo1994/scmav:tagsname](https://hub.docker.com/repository/docker/fengchuiguo1994/scmav)
 
 ## [System Requirements](https://sylabs.io/guides/3.8/admin-guide/installation.html)
