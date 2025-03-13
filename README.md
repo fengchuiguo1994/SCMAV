@@ -178,7 +178,3 @@ ls -lh cellranger-atac-2.1.0/lib/python/atac/barcodes/737K-cratac-v1.txt.gz
 ls -lh cellranger-atac-2.1.0/lib/python/atac/barcodes/737K-arc-v1.txt.gz
 ls -lh cellranger-arc-2.0.2/lib/python/atac/barcodes/737K-arc-v1.txt.gz
 ls -lh cellranger-arc-2.0.2/lib/python/cellranger/barcodes/737K-arc-v1.txt.gz
-
-
-ACAGCGGGTCATCACG        
-AAACACTTGATCCTAC

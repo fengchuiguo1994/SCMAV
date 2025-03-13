@@ -1,0 +1,117 @@
+# library(BandNorm)
+# library(Signac)
+library(dplyr)
+library(data.table)
+library(Matrix)
+args=commandArgs(T) # args=c("SCG0088-15872_SI-NA-D6/bulkChiatac/SCG0088-15872_SI-NA-D6.1000k.bedpe.mat,SCG0089-15872_SI-NA-D6/bulkChiatac/SCG0089-15872_SI-NA-D6.1000k.bedpe.mat,SCG0090-15872_SI-NA-D6/bulkChiatac/SCG0090-15872_SI-NA-D6.1000k.bedpe.mat,SCG0091-15872_SI-NA-D6/bulkChiatac/SCG0091-15872_SI-NA-D6.1000k.bedpe.mat,SCG0092-15872_SI-NA-D6/bulkChiatac/SCG0092-15872_SI-NA-D6.1000k.bedpe.mat,SCG0093-15872_SI-NA-D6/bulkChiatac/SCG0093-15872_SI-NA-D6.1000k.bedpe.mat", "123")
+set.seed(1234)
+
+# ref: https://github.com/sshen82/BandNorm/blob/main/R/bandnorm.R
+# bandnorm is not installed well in my docker image
+
+bandnormxyh = function(path = NULL, hic_df = NULL, save = TRUE, save_path = NULL) {
+  if (is.null(path) && is.null(hic_df)){
+    stop("Please specify one of path or hic_df.")
+  }
+  if (!is.null(path) && !is.null(hic_df)){
+    warning("Specified both path and hic_df. Will use path file as default for saving memory.")
+  }
+  if (save) {
+    if (is.null(save_path)){
+      stop("path for saving the data is NULL!")
+    }
+    if (!dir.exists(save_path)){
+      warning("path for saving the data doesn't exist, will create one according to the directory.")
+      dir.create(save_path, recursive = TRUE)
+    }
+  }
+  # Get path and name for all the cells in this path.
+  if (!is.null(path)){
+    if (!dir.exists(path)){
+      stop("path for data doesn't exist!")
+    }
+    paths = list.files(path, recursive = TRUE, full.names = TRUE)
+    names = basename(list.files(path, recursive = TRUE))
+    # The input format of the cell should be [chr1, bin1, chr2, bin2, count].
+    load_cell = function(i) {
+      return(fread(paths[i], select = c(1, 2, 4, 5)) %>% dplyr::rename(chrom = V1, binA = V2, binB = V4, count = V5) %>%
+               mutate(diag = abs(binB - binA), cell = names[i]))
+    }
+    hic_df = rbindlist(lapply(1:length(paths), load_cell))
+  }
+  # Calculate band depth and the mean of band depth for bandnorm.
+  band_info <- hic_df %>% group_by(chrom, diag, cell) %>% summarise(band_depth = sum(count))
+  alpha_j <- band_info %>% group_by(chrom, diag) %>% summarise(depth = mean(band_depth))
+
+  hic_df <- hic_df %>% left_join(alpha_j, by = c("chrom", "diag")) %>% left_join(band_info, by = c("chrom", "diag", "cell")) %>% mutate(BandNorm = count/band_depth * depth) %>% select(-c(band_depth, depth, count))
+  if (save) {
+    save_path = file.path(save_path, unique(names))
+    for (i in 1:length(unique(names))) {
+      write.table(hic_df[cell == unique(names)[i], c("chrom", "binA", "chrom", "binB", "BandNorm")], file = save_path[i], col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+    }
+  }
+  return(hic_df)
+}
+
+create_embeddingxyh = function (path = NULL, hic_df = NULL, chrs = paste0("chr", c(1:19, "X")), dim_pca = 50, do_harmony = FALSE, batch = NULL) 
+{
+    n = length(unique(hic_df$cell))
+    setDT(hic_df)
+    # hic_df = hic_df[hic_df$diag != 0, ] # hxy
+    names = unique(hic_df$cell)
+    # unique(str_match(names,"^(SCG\\w+)_")[,2])
+    n = length(names)
+    hic_df$cell = as.numeric(factor(hic_df$cell, level = names))
+    hic_df = hic_df %>% mutate(featureIndex = paste(binA, 
+        binB, sep = "_")) %>% select(-c(binA, binB, diag))
+    output = list()
+    # return(hic_df)
+    for (c in 1:length(chrs)) {
+        hic_dfCHR = hic_df[chrom == chrs[c], ]
+        hic_dfCHR$featureIndex = as.numeric(factor(hic_dfCHR$featureIndex))
+        hic_dfCHR = sparseMatrix(i = hic_dfCHR$cell, j = hic_dfCHR$featureIndex, 
+            x = hic_dfCHR$BandNorm, dims = c(max(hic_df$cell), 
+                max(hic_dfCHR$featureIndex)), index1 = TRUE)
+        output[[chrs[c]]] = hic_dfCHR
+    }
+
+    # return(output)
+    
+    SVDInput = c()
+    for (i in 1:length(output)) {
+        SVDInput = cbind(SVDInput, output[[i]])
+    }
+    rownames(SVDInput) = names
+    return(t(SVDInput))
+}
+
+samples = strsplit(args[1], ",")[[1]]
+PETdata = do.call(rbind, lapply(samples, function(x){ return(read.table(x, header = T, sep = "\t", check.names = F, stringsAsFactors = F)) }))
+PETdata$resolution = as.integer(PETdata$resolution)
+PETdata$pos1 = as.integer(PETdata$pos1)
+PETdata$pos2 = as.integer(PETdata$pos2)
+PETdata$count = as.integer(PETdata$count)
+PETdata = PETdata[PETdata$chrom1 == PETdata$chrom2,] # https://github.com/sshen82/BandNorm/issues/4
+# table(PETdata$pos1 > PETdata$pos2)
+
+PETdata$diag = PETdata$pos2 - PETdata$pos1
+PETdata$barcode = paste(PETdata$library, PETdata$cell_id, sep="_")
+# batch = unique(PETdata[, c("barcode", "library")]) %>% as.matrix
+batch = unique(PETdata[, c("barcode", "library")])
+librarylist = unique(batch$library)
+
+PETdata = PETdata[, c("chrom1", "pos1", "pos2", "count", "diag", "barcode")]
+colnames(PETdata) = c("chrom", "binA", "binB", "count", "diag", "cell")
+
+# bandnorm_res = bandnorm(hic_df = PETdata, save = F)
+bandnorm_res = bandnormxyh(hic_df = PETdata, save = F)
+SVDInput = create_embeddingxyh(hic_df = bandnorm_res, do_harmony = F, chrs = sort(unique(PETdata$chrom)))
+rownames(SVDInput) = paste0("cbin",seq(1,nrow(SVDInput)))
+# SVD = RunSVD(SVDInput,assay="ATAC",reduction.key="PETLSI_",reduction.name = "petlsi")
+
+for (k in librarylist) {
+  # print(batch[batch$library==k,]$barcode)
+  SVDInputflt = SVDInput[,batch[batch$library==k,]$barcode]
+  colnames(SVDInputflt) = sub(paste0("^",k,"_"), "" ,colnames(SVDInputflt))
+  saveRDS(SVDInputflt, file = paste0(args[2],".",k,".rds"))
+}
