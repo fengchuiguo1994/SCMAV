@@ -42,14 +42,14 @@ docker rm -f $(docker ps --filter name=basic-browser -q) # delete the basic brow
 ```
 
 ## Install Genome Annotation on Basic Browser
-- 1) Make sure Basic Browser is running at localhost:8000, and you are able to login using your username and password, and a TTY terminal is opened in the container.
-- 2) To create a folder to save gene annotation, go to admin page -> Librarys -> Add library -> Create a library name (for example, "annotation") -> save
-- 3) Copy the file to be uploaded inside basic docker 
+(1) Make sure Basic Browser is running at localhost:8000, and you are able to login using your username and password, and a TTY terminal is opened in the container.<br/>
+(2) To create a folder to save gene annotation, go to admin page -> Librarys -> Add library -> Create a library name (for example, "annotation") -> save<br/>
+(3) Copy the file to be uploaded inside basic docker <br/>
 ```sh
 docker exec -ti basic-browser bash
 scp usename@ip:uploadfile . # hg19_known_genes.txt
 ```
-- 4) Install the genome assembly
+(4) Install the genome assembly <br/>
 ```sh
 _py/bin/python console/table_util.py create hg19 "UCSC Known Genes (hg19)"
 ID=1
