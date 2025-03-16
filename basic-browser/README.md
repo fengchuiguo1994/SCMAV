@@ -110,7 +110,7 @@ TRACK new ${CLU} curv
 
 #### Configure Loop Track
 Go to Tracks in Admin page and select the loop track you just uploaded, under Metadatas "Key" and "Value", set: 
-
+```sh
 Key="options",
 Value=
 {
@@ -121,8 +121,9 @@ Value=
 "yaxis": {
 "log": 10.0 }
 }
-
+```
 Go to the next row,
-
+```sh
 Key="series",
 Value= [{"color": "red"}]
+```
