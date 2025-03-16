@@ -1,19 +1,19 @@
 # Basic Browser
 
-## Basic Browser can take ChIA-PIPE outputs: https://github.com/TheJacksonLaboratory/chia_pipe
-
 ## Running Basic Browser
 Below are the instructions to run Basic Browser docker image.
 
 ## Install Docker
- - [Install Docker for Mac](https://docs.docker.com/v17.09/docker-for-mac/install/)
- - [Install Docker for Windows](https://docs.docker.com/v17.09/docker-for-windows/install/)
- - [Install Docker for Ubuntu](https://docs.docker.com/v17.09/engine/installation/linux/docker-ce/ubuntu/#extra-steps-for-aufs)
+```
+yum install docker # or
+yum install docker-ce
+
+systemctl start docker.service
+systemctl enable docker.service
+```
 
 ## How to build the Basic Browser Docker image
 ```sh
-git clone https://github.com/TheJacksonLaboratory/basic-browser.git
-cd basic-browser
 docker build -t basic-browser .
 cd ..
 ```
@@ -21,59 +21,24 @@ cd ..
 ## How to run Basic Browser
 This creates a mongodb and mysql Docker volumes, which is useful for data persistence
 ```sh
-docker run  -d --rm --name basic-browser \
-       -p 8000:8000 \
-       -v mongodb:/data/db \
-       -v mysql:/var/lib/mysql \
-       basic-browser
+docker run -d --name basic-browser -p 8000:8000 -v mongodb:/data/db -v mysql:/var/lib/mysql  basic-browser # basic browser start
 ```
 The basic browser should be running at localhost:8000. To upload track and data into the Basic Browser, a new TTY terminal must be opened in the container.
 ```sh
-docker exec -ti basic-browser bash
+docker exec -ti basic-browser bash  # enter basic browser (in docker)
 ```
-
-## Create a username and password through the terminal the first time
+Create a username and password through the terminal the first time
 ```sh
 # this should create the superuser 'root'
 cd /opt/basic/
-$BASIC_DIR/_py/bin/python manage.py createsuperuser
-```
+_py/bin/python manage.py createsuperuser # give username, emall and password
+exit # exit basic browser (in docker)
 
-## About Data persistence
-When you ran the above command to start Basic browser, it created two volumes mongodb and mysql. You can see the volumes using the command `docker volume ls`. For the data to persist between sessions and between containers, make sure you dont delete these volumes. If you need to delete the volumes for various reasons, please run 'docker volume rm mysql mongodb'.
+docker stop basic-browser # stop basic browser
+docker start basic-browser # start basic browser
+docker restart basic-browser # restart basic browser
 
-## To delete the basic browser container
-```
-docker rm -f $(docker ps --filter name=basic-browser -q)
-```
-
-## To stop the basic browser container
-Stopping the container will remove the container, as we are running the container with "--rm" option
-```
-docker stop basic-browser
-```
-
-## To restart Basic Browser
-```sh
-docker restart basic-browser
-```
-
-## To make sure mysql, mongod, and basic browser are running
-```sh
-supervisorctl status all
-```
-
-# A note about passwords
-The mysql root password is not set. If you would like to set the root password, follow these steps
-```sh
-# Login to the machine
-docker exec -ti basic-browser bash
-
-# Update the mysql password
-mysql -u root -p
-mysql> use mysql;
-mysql> update user set password=PASSWORD('your_new_password') where User='root';
-mysql> flush privileges;
+docker rm -f $(docker ps --filter name=basic-browser -q) # delete the basic browser container
 ```
 
 ## Genome Installation File Download Links
