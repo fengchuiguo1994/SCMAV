@@ -41,39 +41,19 @@ docker restart basic-browser # restart basic browser
 docker rm -f $(docker ps --filter name=basic-browser -q) # delete the basic browser container
 ```
 
-## Genome Installation File Download Links
-
-(1) Genome Annotation File: http://genome.ucsc.edu/cgi-bin/hgTables
-
-(2) Go Term File: http://www.geneontology.org/doc/GO.terms_alt_ids
-
-(3) Gene Association File: 
-
-human: ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/HUMAN/goa_human.gaf.gz
-
-fly: ftp://ftp.ebi.ac.uk/pub/databases/GO/goa/FLY/goa_fly.gaf.gz
-
-
-## Install Genome Assembly on Basic Browser
-(1)Make sure Basic Browser is running at localhost:8000, and you are able to login using your username and password, and a TTY terminal is opened in the container.
-
-(2)Make sure your files to upload are accessible within the basic browser session. To mount the files in ~/Documents/BasicBrowser/
+## Install Genome Annotation on Basic Browser
+- 1) Make sure Basic Browser is running at localhost:8000, and you are able to login using your username and password, and a TTY terminal is opened in the container.
+- 2) To create a folder to save gene annotation, go to admin page -> Librarys -> Add library -> Create a library name (for example, "annotation") -> save
+- 3) Copy the file to be uploaded inside basic docker 
+```sh
+docker exec -ti basic-browser bash
+scp usename@ip:uploadfile . # hg19_known_genes.txt
 ```
-docker run  -d --rm --name basic-browser -p 8000:8000 \
--v ~/Documents/BasicBrowser/:/Documents -v mongodb:/data/db \
--v mysql:/var/lib/mysql \
-basic-browser
-```
-The files in ~/Documents/BasicBrowser/ will be accessible in /Documents inside basic browser docker
-
-(3)To create a folder to save gene annotation, go to admin page -> Librarys -> Add library -> Create a library name (for example, "annotation") -> save
-
-(4)Install the genome assembly
-```
-source /opt/basic/_py/bin/activate
+- 4) Install the genome assembly
+```sh
 _py/bin/python console/table_util.py create hg19 "UCSC Known Genes (hg19)"
 ID=1
-_py/bin/python console/table_util.py load_genes ${ID} -i /Documents/data/hg19_known_genes.txt --assoc /Documents/data/gene_association.goa_human --terms /Documents/data/GO.terms_alt_ids
+_py/bin/python console/table_util.py load_genes ${ID} -i hg19_known_genes.txt
 _py/bin/python console/track_util.py gen_genes hg19
 ```
 
