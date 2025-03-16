@@ -58,18 +58,14 @@ _py/bin/python console/track_util.py gen_genes hg19
 ```
 
 ## Upload Tracks to Basic Browser
-(1)Make sure your files to upload are accessible within the basic browser session. To mount the files in ~/Documents/BasicBrowser/
+(1) Copy the file to be uploaded inside basic docker <br/>
+```sh
+docker exec -ti basic-browser bash
+scp usename@ip:uploadfile . 
 ```
-docker run  -d --rm --name basic-browser -p 8000:8000 \
--v ~/Documents/BasicBrowser/:/Documents -v mongodb:/data/db \
--v mysql:/var/lib/mysql \
-basic-browser
-```
-The files in ~/Documents/BasicBrowser/ will be accessible in /Documents inside basic browser docker
+(2) To create a folder to organize tracks, go to admin page -> Librarys -> Add library -> Create a library name (for example, "test_upload") -> save <br/>
 
-(2)To create a folder to organize tracks, go to admin page -> Librarys -> Add library -> Create a library name (for example, "test_upload") -> save
-
-# Upload Coverage Track 
+#### Upload Coverage Track 
 (1) To upload the coverage track, first create a table for coverage, select a folder ("test_upload"), and give the name of the track ("GM12878_RNAPII_coverage")
 ```
 alias TABLE="/opt/basic/_py/bin/python /opt/basic/console/table_util.py" 
@@ -84,7 +80,8 @@ COV=2
 ```
 TRACK gen_cov max ${COV} /Documents/GM12878_RNAPII_insitu.for.BROWSER.bedgraph
 ```
-# Upload Peak Track 
+
+#### Upload Peak Track 
 (1) To upload the peak track, first create a table for peak, select a folder ("test_upload"), and give the name of the track ("GM12878_RNAPII_peak")
 ```
 alias TABLE="/opt/basic/_py/bin/python /opt/basic/console/table_util.py" 
@@ -100,7 +97,8 @@ BED=4
 TABLE load ${BED} 1:chrom 2:start 3:end -i /Documents/GM12878_RNAPII_insitu.for.BROWSER.spp.z6.broadPeak
 TRACK new ${BED} scls
 ```
-# Upload Loop Track 
+
+#### Upload Loop Track 
 ```
 alias TABLE="/opt/basic/_py/bin/python /opt/basic/console/table_util.py" 
 alias TRACK="/opt/basic/_py/bin/python /opt/basic/console/track_util.py"
@@ -109,7 +107,8 @@ CLU=3
 TABLE load ${CLU} 1:chrom 2:start 3:end 4:chrom2 5:start2 6:end2 7:score -i /Documents/GM12878_RNAPII_insitu.e500.clusters.cis.BE3
 TRACK new ${CLU} curv
 ```
-# Configure Loop Track
+
+#### Configure Loop Track
 Go to Tracks in Admin page and select the loop track you just uploaded, under Metadatas "Key" and "Value", set: 
 
 Key="options",
