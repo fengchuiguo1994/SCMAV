@@ -48,3 +48,12 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 1. data stat
 ![](img/dataStat.png)
 
+2. align insert size
+![](img/NoLinker.png)
+![](img/2tag.png)
+
+3. profile
+![](img/profile.png)
+
+4. PET count distribution for loops
+![](img/loop.PETcount.distribution.png)
