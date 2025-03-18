@@ -45,7 +45,8 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 ```
 
 #### Example result
-[](exampleData/SCG0074-15872_SI-NA-D6.hg38.bulk_stats.tsv)
+###### Data preprocessing to split out scRNA, scATAC, and scPET triomics data from ChAIR
+[Statistical tables of data processing data](exampleData/SCG0074-15872_SI-NA-D6.hg38.bulk_stats.tsv)
 <table>
   <tr>
     <th>item</th>
