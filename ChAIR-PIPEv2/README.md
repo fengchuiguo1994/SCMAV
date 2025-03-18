@@ -57,3 +57,9 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 
 4. PET count distribution for loops
 ![](img/loop.PETcount.distribution.png)
+
+5. 2D contact and loops
+![](img/2D.png)
+
+6. ATAC fragment length distribution
+![](img/fragment.length.distribution.png)
