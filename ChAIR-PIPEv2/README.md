@@ -63,3 +63,10 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 
 6. ATAC fragment length distribution
 ![](img/fragment.length.distribution.png)
+
+7. barcode rank plot
+![](img/barcodeRankPlot.png)<br>
+[scRNA barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scRNA.html)     [scATAC barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scATAC.html)     [scPET barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scPET.html)
+
+8. barcodeStat in trip-omic
+![](img/barcodestat.png)
