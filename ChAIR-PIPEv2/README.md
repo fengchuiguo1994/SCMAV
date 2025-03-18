@@ -55,7 +55,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>Library_ID</td>
     <td>SCG0074-15872_SI-NA-D6</td>
-    <td rowspan="2">linker calling</td>
+    <td rowspan="8">linker calling</td>
   </tr>
   <tr>
     <td>Genome_origin</td>
@@ -88,7 +88,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>paired_reads/PET/2tag</td>
     <td>162,207,570</td>
-    <td rowspan="2">Aligning</td>
+    <td rowspan="42">Aligning</td>
   </tr>
   <tr>
     <td>PET_UU_all</td>
@@ -257,7 +257,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>all_pet</td>
     <td>19,301,684</td>
-    <td rowspan="2">scPET</td>
+    <td rowspan="31">scPET</td>
   </tr>
   <tr>
     <td>all_trans</td>
@@ -382,7 +382,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>RNA_raw_reads</td>
     <td>230,928,581</td>
-    <td rowspan="2">scRNA</td>
+    <td rowspan="7">scRNA</td>
   </tr>
   <tr>
     <td>RNA_barcode</td>
@@ -411,7 +411,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>ATAC_Peak</td>
     <td>53,238</td>
-    <td rowspan="2">scATAC</td>
+    <td rowspan="9">scATAC</td>
   </tr>
   <tr>
     <td>ATAC_Fragment</td>
