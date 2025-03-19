@@ -1,9 +1,9 @@
 ## ChAIR-PIPEv2
 
-####  Introduction
+##  Introduction
 ChAIR-PIPEv2 processes the sequencing data (ChAIR) to generate single-cell contact, ATAC fragment, peak count matrix, gene expression matrix ......, bulk-cell contact matrix, chromatin loops, coverage signal, peak ...... . ChAIR-PIPEv2 includes module: linker calling, mapping, duplicate removing, loop calling and more.
 
-#### Usage
+## Usage
 A ChAIR demo data from K562 was provided.<br/>
 1. Prepare ChAIR data <br/>
 ```sh
@@ -44,8 +44,8 @@ codepath="~/scChAIR/codes"
 bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 ```
 
-#### Example result
-###### Data preprocessing to split out scRNA, scATAC, and scPET triomics data from ChAIR
+## Example result
+#### Data preprocessing to split out scRNA, scATAC, and scPET triomics data from ChAIR
 [Statistical tables of data processing data](exampleData/SCG0074-15872_SI-NA-D6.hg38.bulk_stats.tsv)
 <table>
   <tr>
@@ -473,3 +473,10 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 
 8. barcodeStat in trip-omic
 ![](img/barcodestat.png)
+
+#### Single-Cell analysis
+1. doublet remove
+![](img/doublet.png)
+
+2. cell data stat
+![](img/datastat.exp.png)
