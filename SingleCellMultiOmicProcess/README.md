@@ -20,7 +20,7 @@ In the software parameter, you can only choose custom. ChAIR-DNA data can also b
 
 ## ChAIR-DNA
 In the software parameter, you can only choose custom.
-#### Custom Design
+#### Custom Design. [Details in ChIATAC data process](../ChIA-PIPEv3)
 - 1. Splitting large files into smaller chunk, trimming [Nextera Transposase Sequence](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) by using [Trimmomatic](https://github.com/usadellab/Trimmomatic), linker calling and removing by using [cutadapt](https://github.com/marcelm/cutadapt).
 - 2. Detecting barcode by using STARsolo, aligning by using [BWA-MEM and BWA-aln](https://github.com/lh3/bwa).
 - 3. Removing PCR reads by using [Picard](https://broadinstitute.github.io/picard/).
