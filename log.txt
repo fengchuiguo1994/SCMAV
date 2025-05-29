@@ -1,0 +1,169 @@
+# cpu12 10threads 50G
+# zcat /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.R1.1.fastq.gz | awk '{if(NR%4==2){print "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"}else{print $0}}' | gzip > test2.fq.gz
+
+
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test1 --readFilesCommand zcat --readFilesIn /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.R1.1.fastq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test1 --readFilesCommand zcat --readFilesIn /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.R1.1.fastq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 14:35:21 ..... started STAR run
+# May 29 14:35:22 ..... loading genome
+# May 29 14:36:19 ..... started mapping
+# May 29 14:38:18 ..... finished mapping
+# May 29 14:38:19 ..... started sorting BAM
+# May 29 14:38:40 ..... finished successfully
+# real 3:21.21
+# user 1135.91
+# sys  32.25
+# Mmem 27866692 KB
+# Amem 0 KB
+# cpuP 580%
+# fsi 53689412
+# fso 10168352
+
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/10M/HiClocalInOutPutHiC-10M/fastq/MC_Droplet-10M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 14:42:00 ..... started STAR run
+# May 29 14:42:00 ..... loading genome
+# May 29 14:42:35 ..... started mapping
+# May 29 14:42:50 ..... finished mapping
+# May 29 14:42:50 ..... started sorting BAM
+# May 29 14:43:11 ..... finished successfully
+# real 1:14.33
+# user 81.99
+# sys  29.22
+# Mmem 27246300 KB
+# Amem 0 KB
+# cpuP 149%
+# fsi 12451694
+# fso 7848160
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# cpu12 10threads 50G
+# zcat /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.R1.1.fastq.gz | awk '{if(NR%4==2){print "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN"}else{print $0}}' | gzip > test2.fq.gz
+
+
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test1 --readFilesCommand zcat --readFilesIn /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.R1.1.fastq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test1 --readFilesCommand zcat --readFilesIn /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.R1.1.fastq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 14:48:33 ..... started STAR run
+# May 29 14:48:34 ..... loading genome
+# May 29 14:49:25 ..... started mapping
+# May 29 14:53:26 ..... finished mapping
+# May 29 14:53:26 ..... started sorting BAM
+# May 29 14:54:06 ..... finished successfully
+# real 5:29.06
+# user 2324.52
+# sys  93.45
+# Mmem 27850804 KB
+# Amem 0 KB
+# cpuP 734%
+# fsi 11500088
+# fso 20219792
+
+
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM SortedByCoordinate --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 14:54:50 ..... started STAR run
+# May 29 14:54:51 ..... loading genome
+# May 29 14:55:46 ..... started mapping
+# May 29 14:56:20 ..... finished mapping
+# May 29 14:56:20 ..... started sorting BAM
+# May 29 14:57:03 ..... finished successfully
+# real 2:15.69
+# user 162.50
+# sys  58.18
+# Mmem 25786160 KB
+# Amem 0 KB
+# cpuP 162%
+# fsi 20204318
+# fso 15701312
+
+
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test2 --readFilesCommand zcat --readFilesIn test2.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 15:01:11 ..... started STAR run
+# May 29 15:01:11 ..... loading genome
+# May 29 15:01:51 ..... started mapping
+# May 29 15:02:45 ..... finished mapping
+# May 29 15:02:46 ..... finished successfully
+# real 1:35.44
+# user 162.10
+# sys  21.90
+# Mmem 27806212 KB
+# Amem 0 KB
+# cpuP 192%
+# fsi 31923464
+# fso 1397880
+
+
+# zcat /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.R1.1.fastq.gz | awk '{if(NR%4==2||NR%4==0){print "NNNNNNNNNNNNNNN"}else{print $0}}' | gzip > test3.fq.gz
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test3 --readFilesCommand zcat --readFilesIn test3.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir /data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/mm10_index --outFileNamePrefix test3 --readFilesCommand zcat --readFilesIn test3.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 15:06:20 ..... started STAR run
+# May 29 15:06:20 ..... loading genome
+# May 29 15:07:16 ..... started mapping
+# May 29 15:07:35 ..... finished mapping
+# May 29 15:07:36 ..... finished successfully
+# real 1:16.28
+# user 110.27
+# sys  49.88
+# Mmem 26195312 KB
+# Amem 0 KB
+# cpuP 209%
+# fsi 8185450
+# fso 450840
+
+
+# zcat /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.R1.1.fastq.gz | awk '{if(NR%4==2||NR%4==0){print "NNNNNNNNN"}else{print $0}}' | gzip > test4.fq.gz
+# singularity exec /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --runMode genomeGenerate --genomeDir testindex --genomeFastaFiles genome.fa --sjdbGTFfile genome.gtf --genomeSAindexNbases 1
+# /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' singularity run /data/home/ruanlab/huangxingyu/Tools/STAR.sif STAR --genomeDir testindex/ --outFileNamePrefix test4 --readFilesCommand zcat --readFilesIn test4.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         /home/bin/STAR --genomeDir testindex/ --outFileNamePrefix test4 --readFilesCommand zcat --readFilesIn test4.fq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/fastq/MC_Droplet-20M.barcode.1.cg.fastq.gz --soloCBstart 1 --soloCBlen 16 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/ATAC/737K-cratac-v1.txt --soloCellFilter EmptyDrops_CR --runThreadN 10 --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward
+#         STAR version: 2.7.10a   compiled: 2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+# May 29 15:16:58 ..... started STAR run
+# May 29 15:16:59 ..... loading genome
+# May 29 15:16:59 ..... started mapping
+# May 29 15:17:21 ..... finished mapping
+# May 29 15:17:21 ..... finished successfully
+# real 0:23.08
+# user 107.68
+# sys  2.51
+# Mmem 1709840 KB
+# Amem 0 KB
+# cpuP 477%
+# fsi 6884
+# fso 447728
+
+
+
+
+
+
+
+
+
+
+/usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\nAmem %K KB\ncpuP %P\nfsi %I\nfso %O' /data/home/ruanlab/huangxingyu/Tools/bwa-0.7.17/bwa mem -5SP -t 10 /data/home/ruanlab/huangxingyu/Haoxi20230315/20230205_pipeline/refs/mm10/bwa/mm10.fa /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/trim/MC_Droplet-20M.R1.1.fastq.gz /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/example/scHi-C/20M/HiClocalInOutPutHiC-20M/trim/MC_Droplet-20M.R2.1.fastq.gz | singularity run /data/home/ruanlab/huangxingyu/scChAIR/ChAIR.sif samtools view -@ 10 -Sb -F 2048  - | singularity run /data/home/ruanlab/huangxingyu/scChAIR/ChAIR.sif python /data/home/ruanlab/huangxingyu/scChAIR/ChIAV3/script/BWAmemFilter.py > bwatest.bam
+
+
+
+
+samtools view -f 16 bwa1.tmp.addBC.parsed.flt.pairsam.bam | perl -lane 'if($F[5]=~/^\d+M$/){$a=1}else{print $_}' | perl -lane 'if($F[5]=~/.+?M$/){$a=1}else{print $_}' | cut -f 6 | perl -lane 'if($_=~/(\d+S$)/){print $1}' | sort -h | uniq -c | less # max: 120S
