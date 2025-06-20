@@ -1,9 +1,9 @@
 ## ChAIR library
 ![](img/tech.png)
-Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (DNA and cDNA). 
+Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (ChIATAC-DNA and cDNA) or three library data (ChIATAC-DNA, ATAC-DNA and cDNA). 
 
 ## SCMAV
-single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>[ChAIR-PIPEv2](ChAIR-PIPEv2)</strong>, <strong>[ChIA-PIPEv2](ChIA-PIPEv2)</strong>, <strong>[SingleCellMultiOmicProcess](SingleCellMultiOmicProcess)</strong>, <strong>ChAIR-View ([shiny version](ChAIR-View-shiny) and [local version](ChAIR-View-local))</strong> and <strong>[basic browser](basic-browser)</strong>. <br/>
+single-cell multi-omic analysis and visualization tools. SCMAV contain a <strong>[ChAIR-PIPEv2](ChAIR-PIPEv2)</strong>, <strong>[ChIA-PIPEv2](ChIA-PIPEv2)</strong>, <strong>[SCMAV](SCMAV)</strong>, <strong>ChAIR-View ([shiny version](ChAIR-View-shiny) and [local version](ChAIR-View-local))</strong> and <strong>[basic browser](basic-browser)</strong>. <br/>
 
 The <strong>core components</strong> of data processing have been uploaded to DockerHub to avoid tedious software installation. <br/>
 **DockerHub Link: [https://hub.docker.com/repository/docker/fengchuiguo1994/scmav:tagsname](https://hub.docker.com/repository/docker/fengchuiguo1994/scmav)
@@ -40,3 +40,12 @@ You can download SCMAV by running the following command:
 ```
 singularity build scmav.sif docker://fengchuiguo1994/scmav:v1
 ```
+
+## ChIATAC analysis
+#### Trim Nextera Transposase Sequence
+<div style="text-align:center"> ![](img/fastqc.png)<br/>generate by FastQC</div> 
+ChIATAC/ChAIR-DNA/ATAC data's end always has Nextera Transposase Sequence. The Nextera Transposase Sequence is removed by using Trimmomatic.
+```
+LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30
+```
+- linker calling
