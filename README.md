@@ -48,7 +48,26 @@ singularity build scmav.sif docker://fengchuiguo1994/scmav:v1
 ChIATAC/ChAIR-DNA/ATAC data's end always has Nextera Transposase Sequence. The Nextera Transposase Sequence is removed by using Trimmomatic.<br/>
 
 ```shell
-LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30
+trimmomatic LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30
 ```
 
-- linker calling
+#### 2. Get truncated reads.
+Linker calling by using cutadapt, and get the truncated reads.
+
+```shell
+cutadapt -b file:${linkerfile} -n 50
+```
+
+#### 3. Align all reads and get pairs
+All reads from R1 (contain truncated reads and no-truncated reads) are aligned by bwa. All reads from R2 (contain truncated reads and no-truncated reads) are aligned by bwa. Low mapped quality reads are removed. If the reads has more than one loci on R1 and R2 aligned to the genome (R1 and R2 aligned), take the most terminal (5'end) loci of R1 and R2 to form a pair. If more than one loci from R1 or R2 reads are aligned to the genome (R1 or R2 aligned), take the most terminal (5'end and 3'end) loci to form a pair.
+
+```shell
+bwa mem -5
+bwa aln
+```
+
+#### 4. Get ATAC signal and PET signal
+According insert size and strand to classify. 
+- ATAC: distance less than 1kb and FR type pairs. 
+- PET: distance great than 1kb and inter-chromosome pairs. 
+- TTANDEM: distance less than 1kb and non-FR type pairs.
