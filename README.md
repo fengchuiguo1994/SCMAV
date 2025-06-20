@@ -46,6 +46,7 @@ singularity build scmav.sif docker://fengchuiguo1994/scmav:v1
 ![](img/fastqc.png)<br/>
 <p align="center">generate by FastQC</p><br/>
 ChIATAC/ChAIR-DNA/ATAC data's end always has Nextera Transposase Sequence. The Nextera Transposase Sequence is removed by using Trimmomatic.<br/>
+
 ```shell
 LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30
 ```
