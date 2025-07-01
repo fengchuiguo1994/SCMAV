@@ -45,7 +45,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 ```
 
 ## Example result
-#### Data preprocessing to split out scRNA, scATAC, and scPET triomics data from ChAIR
+#### Data preprocessing to split out ChAIR-RNA, ChAIR-ATAC, and ChAIR-PET triomics data from ChAIR
 [Statistical tables of data processing data](exampleData/SCG0074-15872_SI-NA-D6.hg38.bulk_stats.tsv)
 <table>
   <tr>
@@ -258,7 +258,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>all_pet</td>
     <td>19,301,684</td>
-    <td rowspan="31">scPET</td>
+    <td rowspan="31">ChAIR-PET</td>
   </tr>
   <tr>
     <td>all_trans</td>
@@ -383,7 +383,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>RNA_raw_reads</td>
     <td>230,928,581</td>
-    <td rowspan="7">scRNA</td>
+    <td rowspan="7">ChAIR-RNA</td>
   </tr>
   <tr>
     <td>RNA_barcode</td>
@@ -412,7 +412,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
   <tr>
     <td>ATAC_Peak</td>
     <td>53,238</td>
-    <td rowspan="9">scATAC</td>
+    <td rowspan="9">ChAIR-ATAC</td>
   </tr>
   <tr>
     <td>ATAC_Fragment</td>
@@ -469,7 +469,7 @@ bash submit_cpu10x_for_scChAIR.hg38.pro.sh k562.input.list # abspath
 
 7. barcode rank plot
 ![](img/barcodeRankPlot.png)<br>
-[scRNA barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scRNA.html)             [scATAC barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scATAC.html)             [scPET barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.scPET.html)
+[ChAIR-RNA barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.ChAIR-RNA.html)             [ChAIR-ATAC barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.ChAIR-ATAC.html)             [ChAIR-PET barcode rank plot](img/SCG0074-15872_SI-NA-D6.barcodeRankPlot.pdf.ChAIR-PET.html)
 
 8. barcodeStat in trip-omic
 ![](img/barcodestat.png)
