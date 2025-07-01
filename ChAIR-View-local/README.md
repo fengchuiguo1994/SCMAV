@@ -56,8 +56,6 @@ mouseBrain.clean.dup.GEX.mouseBrain.fragments.unsorted.tsv|scRNA (contain mapped
 Rscript plotData.R
 ```
 
-#### 4. The ChAIR-viewer version of shiny is will be finished soon. 
-
 # CONTACT
 黄加祥 (Jiaxiang Huang, 12207142@zju.edu.cn)<br/>
 黄星宇 (Xingyu Huang, xingyu.huang@zju.edu.cn/huang182@live.cn)<br/>
