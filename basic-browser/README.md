@@ -129,3 +129,6 @@ Go to the next row,
 Key="series",
 Value= [{"color": "red"}]
 ```
+
+# Citation
+Lee B., Wang J., Cai L., Kim M., Namburi S., Tjong H., Feng Y., Wang P., Tang Z., Abbas A., Wei C. L., Ruan Y., Li S. ChIA-PIPE: A fully automated pipeline for comprehensive ChIA-PET data analysis and visualization. Sci Adv, 2020, 6: eaay2078. [https://pubmed.ncbi.nlm.nih.gov/32832596/](https://pubmed.ncbi.nlm.nih.gov/32832596/)
