@@ -1,5 +1,7 @@
 # Basic Browser
 
+[Refer to the TheJacksonLaboratory basic-browser](https://github.com/TheJacksonLaboratory/basic-browser)
+
 ## Running Basic Browser
 Below are the instructions to run Basic Browser docker image.
 
