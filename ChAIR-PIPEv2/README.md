@@ -1,5 +1,7 @@
 ## ChAIR-PIPEv2
 
+ChAIR-PIPEv2 is an upgraded version of [ChRDPETpipeline](https://github.com/fengchuiguo1994/ChRDPETpipeline). This version optimizes ChAIR data processing details and adds graphical visualization reports.
+
 ##  Introduction
 ChAIR-PIPEv2 processes the sequencing data (ChAIR) to generate single-cell contact, ATAC fragment, peak count matrix, gene expression matrix ......, bulk-cell contact matrix, chromatin loops, coverage signal, peak ...... . ChAIR-PIPEv2 includes module: linker calling, mapping, duplicate removing, loop calling and more.
 
