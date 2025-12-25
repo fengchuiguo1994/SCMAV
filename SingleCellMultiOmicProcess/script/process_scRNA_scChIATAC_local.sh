@@ -271,6 +271,7 @@ $tabix -f -p bed fragment/${outprefix}_fragments.tsv.gz
 mkdir -p peak
 $samtools merge -f -@ $NTHREAD -n -o DNAalign/$outprefix.scATAC.bam DNAalign/$outprefix.FRlt.bam DNAalign/$outprefix.scPET.bam
 $samtools sort -m 1000M -@ $NTHREAD -o DNAalign/$outprefix.scATAC.sorted.bam DNAalign/$outprefix.scATAC.bam
+samtools index DNAalign/$outprefix.scATAC.sorted.bam &
 /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\ncpuP %P\nfsi %I\nfso %O' -o peak/$outprefix.macs2.time.log $macs2 callpeak -f BAM --keep-dup all --nomodel --shift $shiftsize --extsize $peakext -B --SPMR -t DNAalign/$outprefix.scATAC.sorted.bam -g $glen -n peak/$outprefix --qvalue $macsq > peak/$outprefix.macs2.log 2> peak/$outprefix.macs2.log.err
 awk '\$7+0.0 > 1.5' peak/${outprefix}_peaks.narrowPeak | grep -v -i "chrM" | cut -f 1-3 > peak/${outprefix}.peak
 
@@ -287,6 +288,7 @@ $pigz -p $NTHREAD ATAC/filtered_matrix/features.tsv ATAC/filtered_matrix/matrix.
 
 $python $statChAIRATAC fastq/$outprefix.readsnum DNAalign/STAR.barcodereadsnum trim/$outprefix.trim.readsnum linker/cutadapt.linker.readsnum DNAalign/bwa.withlinker.readsnum DNAalign/bwa.withoutlinker.readsnum DNAalign/bwa.withlinker.addBC.barcodeuniquereadsnum DNAalign/bwa.withoutlinker.addBC.barcodeuniquereadsnum DNAalign/bwa.withlinker.addBC.barcodeuniquermPCRreadsnum DNAalign/bwa.withoutlinker.addBC.barcodeuniquermPCRreadsnum fragment/${outprefix}_fragments.unsorted.tsv.log peak/${outprefix}.peak ATAC/filtered_matrix/matrix.mtx.gz custom > ATAC/${outprefix}.stat
 
+wait
 $bamCoverage -b DNAalign/$outprefix.scATAC.sorted.bam --minMappingQuality $mapq -o ATAC/${outprefix}.ATAC.bw -bs 5 -p ${NTHREAD}
 $bamCoverage -b DNAalign/$outprefix.scATAC.sorted.bam --minMappingQuality $mapq -o ATAC/${outprefix}.ATAC.RPKM.bw -bs 5 -p ${NTHREAD} --normalizeUsing RPKM
 $computeMatrix scale-regions -S ATAC/${outprefix}.ATAC.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName ATAC/${outprefix}.ATAC.RPKM.genebody.gz -p ${NTHREAD}
