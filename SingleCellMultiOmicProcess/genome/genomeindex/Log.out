@@ -1,0 +1,68 @@
+STAR version=2.7.10a
+STAR compilation time,server,dir=2022-05-11T17:42:47+00:00 cb5d3616d6c5:/home/STAR-2.7.10a/source
+STAR git: 
+##### Command Line:
+/home/bin/STAR --runMode genomeGenerate --genomeDir genomeindex --genomeFastaFiles genome.fa --sjdbGTFfile genome.gtf --genomeSAindexNbases 1
+##### Initial USER parameters from Command Line:
+###### All USER parameters from Command Line:
+runMode                       genomeGenerate        ~RE-DEFINED
+genomeDir                     genomeindex     ~RE-DEFINED
+genomeFastaFiles              genome.fa        ~RE-DEFINED
+sjdbGTFfile                   genome.gtf     ~RE-DEFINED
+genomeSAindexNbases           1     ~RE-DEFINED
+##### Finished reading parameters from all sources
+
+##### Final user re-defined parameters-----------------:
+runMode                           genomeGenerate   
+genomeDir                         genomeindex
+genomeFastaFiles                  genome.fa   
+genomeSAindexNbases               1
+sjdbGTFfile                       genome.gtf
+
+-------------------------------
+##### Final effective command line:
+/home/bin/STAR   --runMode genomeGenerate      --genomeDir genomeindex   --genomeFastaFiles genome.fa      --genomeSAindexNbases 1   --sjdbGTFfile genome.gtf
+----------------------------------------
+
+Number of fastq files for each mate = 1
+ParametersSolo: --soloCellFilterType CellRanger2.2 filtering parameters:  3000 0.99 10
+Finished loading and checking parameters
+--genomeDir directory created: genomeindex/
+May 29 16:43:05 ... starting to generate Genome files
+genome.fa : chr # 0  "chr1" chrStart: 0
+Chromosome sequence lengths: 
+chr1	29
+Genome sequence total length = 29
+Genome size with padding = 262144
+May 29 16:43:05 ..... processing annotations GTF
+Processing pGe.sjdbGTFfile=genome.gtf, found:
+		1 transcripts
+		1 exons (non-collapsed)
+		0 collapsed junctions
+Total junctions: 0
+May 29 16:43:05 ..... finished GTF processing
+
+Estimated genome size with padding and SJs: total=genome+SJ=201262144 = 262144 + 201000000
+GstrandBit=32
+Number of SA indices: 58
+May 29 16:43:05 ... starting to sort Suffix Array. This may take a long time...
+Number of chunks: 1;   chunks size limit: 18599685304 bytes
+May 29 16:43:05 ... sorting Suffix Array chunks and saving them to disk...
+Writing 464 bytes into genomeindex//SA_0 ; empty space on disk = 717661879668736 bytes ... done
+May 29 16:43:05 ... loading chunks from disk, packing SA...
+May 29 16:43:05 ... finished generating suffix array
+May 29 16:43:05 ... generating Suffix Array index
+May 29 16:43:05 ... completed Suffix Array index
+May 29 16:43:05   Finished preparing junctions
+May 29 16:43:05 ..... finished inserting junctions into genome
+May 29 16:43:05 ... writing Genome to disk ...
+Writing 262144 bytes into genomeindex//Genome ; empty space on disk = 717661879668736 bytes ... done
+SA size in bytes: 243
+May 29 16:43:05 ... writing Suffix Array to disk ...
+Writing 243 bytes into genomeindex//SA ; empty space on disk = 717661879668736 bytes ... done
+May 29 16:43:05 ... writing SAindex to disk
+Writing 8 bytes into genomeindex//SAindex ; empty space on disk = 717661879668736 bytes ... done
+Writing 16 bytes into genomeindex//SAindex ; empty space on disk = 717661879668736 bytes ... done
+Writing 21 bytes into genomeindex//SAindex ; empty space on disk = 717661879668736 bytes ... done
+May 29 16:43:05 ..... finished successfully
+DONE: Genome generation, EXITING

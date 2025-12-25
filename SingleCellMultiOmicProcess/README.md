@@ -1,3 +1,15 @@
+## barcodefile
+```
+zcat ${cellranger path}/lib/python/cellranger/barcodes/737K-arc-v1.txt.gz > barcodefile/RNA.737K-arc-v1.txt
+zcat ${cellranger-atac path}/lib/python/atac/barcodes/737K-arc-v1.txt.gz > barcodefile/DNA.737K-arc-v1.txt
+paste RNA.737K-arc-v1.txt DNA.737K-arc-v1.txt | sed 's/\t/,/' > barcodefile/RNADNA.737K.barcodetranslate.txt
+```
+## geneinfo
+```
+perl -lane 'if($F[2] eq "gene"){if(/gene_id "(.+?)";.+?gene_type "(.+?)";.+?gene_name "(.+?)";/){print "$F[0]\t".($F[3]-1)."\t$F[4]\t$1\t.\t$F[6]\t$3\t$2"}}' ${cellranger path}/genome/refdata-gex-mm10-2020-A/genes/genes.gtf > geneinfo/mm10.info
+```
+
+
 ## scRNA
 In the software parameter, you can choose whether to call cellranger or starsolo. [cellranger](https://www.10xgenomics.com/support/software/cell-ranger/latest): slow. [STARsolo](https://github.com/alexdobin/STAR/blob/master/docs/STARsolo.md): fast.
 
