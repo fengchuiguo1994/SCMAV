@@ -49,7 +49,7 @@ $Rscript $statRNA RNAalign/outs/metrics_summary.csv 10X > RNA/${outprefix}.stat
 
 $bamCoverage -b RNAalign/outs/possorted_genome_bam.bam --minMappingQuality $mapq -o RNA/${outprefix}.gex.bw -bs 5 -p ${NTHREAD}
 $bamCoverage -b RNAalign/outs/possorted_genome_bam.bam --minMappingQuality $mapq -o RNA/${outprefix}.gex.RPKM.bw -bs 5 -p ${NTHREAD} --normalizeUsing RPKM
-$computeMatrix scale-regions -S RNA/${outprefix}.gex.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName RNA/${outprefix}.gex.RPKM.genebody.gz -p ${NTHREAD}
+$computeMatrix scale-regions --quiet -S RNA/${outprefix}.gex.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName RNA/${outprefix}.gex.RPKM.genebody.gz -p ${NTHREAD}
 $plotHeatmap -m RNA/${outprefix}.gex.RPKM.genebody.gz -out RNA/${outprefix}.gex.RPKM.genebody.Heatmap.pdf &
 $plotProfile -m RNA/${outprefix}.gex.RPKM.genebody.gz -out RNA/${outprefix}.gex.RPKM.genebody.Profile.pdf
 wait
@@ -96,7 +96,7 @@ $Rscript $statRNA RNAalign/STARSolo.out/Gene/Summary.csv STARsolo > RNA/${outpre
 
 $bamCoverage -b RNAalign/STARAligned.sortedByCoord.out.bam --minMappingQuality $mapq -o RNA/${outprefix}.gex.bw -bs 5 -p ${NTHREAD}
 $bamCoverage -b RNAalign/STARAligned.sortedByCoord.out.bam --minMappingQuality $mapq -o RNA/${outprefix}.gex.RPKM.bw -bs 5 -p ${NTHREAD} --normalizeUsing RPKM
-$computeMatrix scale-regions -S RNA/${outprefix}.gex.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName RNA/${outprefix}.gex.RPKM.genebody.gz -p ${NTHREAD}
+$computeMatrix scale-regions --quiet -S RNA/${outprefix}.gex.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName RNA/${outprefix}.gex.RPKM.genebody.gz -p ${NTHREAD}
 $plotHeatmap -m RNA/${outprefix}.gex.RPKM.genebody.gz -out RNA/${outprefix}.gex.RPKM.genebody.Heatmap.pdf &
 $plotProfile -m RNA/${outprefix}.gex.RPKM.genebody.gz -out RNA/${outprefix}.gex.RPKM.genebody.Profile.pdf
 wait
@@ -144,21 +144,19 @@ mkdir -p DNAalign
 mkdir -p trim
 mkdir -p linker
 for i in \$(seq \$nfile); do 
-    /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\ncpuP %P\nfsi %I\nfso %O' -o $outdir/trim/$outprefix.\${i}.trim.time.log java -jar ${trimmomaticpath}/trimmomatic-0.39.jar PE -threads $NTHREAD -phred33 $outdir/fastq/$outprefix.R1.\${i}.fastq $outdir/fastq/$outprefix.R2.\${i}.fastq $outdir/trim/$outprefix.R1.\${i}.fastq $outdir/trim/$outprefix.R1.\${i}.unpair.fastq $outdir/trim/$outprefix.R2.\${i}.fastq $outdir/trim/$outprefix.R2.\${i}.unpair.fastq LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30 > $outdir/trim/$outprefix.\${i}.trim.log 2> $outdir/trim/$outprefix.\${i}.trim.log.err # && rm $outdir/fastq/$outprefix.R1.\${i}.fastq $outdir/fastq/$outprefix.R2.\${i}.fastq
+    /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\ncpuP %P\nfsi %I\nfso %O' -o $outdir/trim/$outprefix.\${i}.trim.time.log java -jar ${trimmomaticpath}/trimmomatic-0.39.jar PE -threads $NTHREAD -phred33 $outdir/fastq/$outprefix.R1.\${i}.fastq $outdir/fastq/$outprefix.R2.\${i}.fastq $outdir/trim/$outprefix.R1.\${i}.fastq $outdir/trim/$outprefix.R1.\${i}.unpair.fastq $outdir/trim/$outprefix.R2.\${i}.fastq $outdir/trim/$outprefix.R2.\${i}.unpair.fastq LEADING:5 TRAILING:5 ILLUMINACLIP:${trimmomaticpath}/adapters/NexteraPE-PE.fa:2:30:7:8:true MINLEN:30 > $outdir/trim/$outprefix.\${i}.trim.log 2> $outdir/trim/$outprefix.\${i}.trim.log.err 
     grep Surviving $outdir/trim/$outprefix.\${i}.trim.log.err | perl -lane 'if(/Both Surviving: (\d+) /){\$a=\$1;} if(/Forward Only Surviving: (\d+) /){\$b=\$1;} if(/Reverse Only Surviving: (\d+) /){\$c=\$1;} print "Trim_Reads\t".(\$a+\$b+\$c)' > $outdir/trim/$outprefix.\${i}.trim.readsnum
 
-    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info --discard -o $outdir/linker/cutadapt.R1.\${i}.pair.tmp.fastq -O 8 $outdir/trim/$outprefix.R1.\${i}.fastq > $outdir/linker/cutadapt.R1.\${i}.pair.cutadapt.stat # && rm $outdir/linker/cutadapt.R1.\${i}.pair.tmp.fastq $outdir/trim/$outprefix.R1.\${i}.fastq
-    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info --discard -o $outdir/linker/cutadapt.R1.\${i}.unpair.tmp.fastq -O 8 $outdir/trim/$outprefix.R1.\${i}.unpair.fastq > $outdir/linker/cutadapt.R1.\${i}.unpair.cutadapt.stat # && rm $outdir/linker/cutadapt.R1.\${i}.unpair.tmp.fastq $outdir/trim/$outprefix.R1.\${i}.unpair.fastq
-    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info --discard -o $outdir/linker/cutadapt.R2.\${i}.pair.tmp.fastq -O 8 $outdir/trim/$outprefix.R2.\${i}.fastq > $outdir/linker/cutadapt.R2.\${i}.pair.cutadapt.stat # && rm $outdir/linker/cutadapt.R2.\${i}.pair.tmp.fastq $outdir/trim/$outprefix.R2.\${i}.fastq
-    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info --discard -o $outdir/linker/cutadapt.R2.\${i}.unpair.tmp.fastq -O 8 $outdir/trim/$outprefix.R2.\${i}.unpair.fastq > $outdir/linker/cutadapt.R2.\${i}.unpair.cutadapt.stat # && rm $outdir/linker/cutadapt.R2.\${i}.unpair.tmp.fastq $outdir/trim/$outprefix.R2.\${i}.unpair.fastq
+    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info --discard -o $outdir/linker/cutadapt.R1.\${i}.pair.tmp.fastq -O 8 $outdir/trim/$outprefix.R1.\${i}.fastq > $outdir/linker/cutadapt.R1.\${i}.pair.cutadapt.stat 
+    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info --discard -o $outdir/linker/cutadapt.R1.\${i}.unpair.tmp.fastq -O 8 $outdir/trim/$outprefix.R1.\${i}.unpair.fastq > $outdir/linker/cutadapt.R1.\${i}.unpair.cutadapt.stat 
+    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info --discard -o $outdir/linker/cutadapt.R2.\${i}.pair.tmp.fastq -O 8 $outdir/trim/$outprefix.R2.\${i}.fastq > $outdir/linker/cutadapt.R2.\${i}.pair.cutadapt.stat 
+    $cutadapt -j $NTHREAD -b file:${linkerfile} -n 50 --info-file $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info --discard -o $outdir/linker/cutadapt.R2.\${i}.unpair.tmp.fastq -O 8 $outdir/trim/$outprefix.R2.\${i}.unpair.fastq > $outdir/linker/cutadapt.R2.\${i}.unpair.cutadapt.stat 
     $python $getReadPro $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info $outdir/linker/cutadapt.\${i} 18 T > $outdir/linker/cutadapt.\${i}.splitReads.log
     cat $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info  $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info  $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info  $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info | awk -F"\t" '\$2!=-1' | awk '{aa[\$1]}END{print "Linker_Reads\t"length(aa)}' > $outdir/linker/cutadapt.\${i}.linker.readsnum
-    # rm $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info
     $pigz -p $NTHREAD -f $outdir/linker/cutadapt.\${i}.R1.pair.long.fastq $outdir/linker/cutadapt.\${i}.R1.unpair.long.fastq $outdir/linker/cutadapt.\${i}.R2.pair.long.fastq $outdir/linker/cutadapt.\${i}.R2.unpair.long.fastq $outdir/linker/cutadapt.\${i}.R1.pair.short.fastq $outdir/linker/cutadapt.\${i}.R1.unpair.short.fastq $outdir/linker/cutadapt.\${i}.R2.pair.short.fastq $outdir/linker/cutadapt.\${i}.R2.unpair.short.fastq
 
     /usr/bin/time -f 'real %E\nuser %U\nsys  %S\nMmem %M KB\ncpuP %P\nfsi %I\nfso %O' -o DNAalign/STAR\${i}.time.log $STARsolo --genomeDir $barcoderef --outFileNamePrefix DNAalign/STAR\${i} --readFilesIn $outdir/fastq/$outprefix.R1.\${i}.tmp.fastq $outdir/fastq/$outprefix.barcode.\${i}.fastq --soloCBstart 1 --soloCBlen $var2 --soloUMIstart 1 --soloUMIlen 1 --soloType CB_samTagOut --soloCBwhitelist $DNAbarcodefile --runThreadN $NTHREAD --outSAMattributes CB --outSAMtype BAM Unsorted --clipAdapterType CellRanger4 --outFilterScoreMin 30 --soloCBmatchWLtype 1MM --soloUMIfiltering MultiGeneUMI_CR --soloUMIdedup 1MM_CR --outSAMunmapped Within --soloStrand Forward > DNAalign/STAR\${i}.log 2> DNAalign/STAR\${i}.log.err
     grep yes DNAalign/STAR\${i}Solo.out/Barcodes.stats | awk '{sum+=\$2}END{print "barcodeReads\t"sum}' > DNAalign/STAR\${i}.barcodereadsnum
-    # rm $outdir/fastq/$outprefix.R1.\${i}.tmp.fastq $outdir/fastq/$outprefix.barcode.\${i}.fastq
 
     $bwa mem -5 -t $NTHREAD $bwaref $outdir/linker/cutadapt.\${i}.R1.pair.long.fastq.gz | $python $addMark R1 mem | $samtools sort -n -@ $NTHREAD -o $outdir/DNAalign/bwa\${i}.R1.pair.long.bam -
     $bwa mem -5 -t $NTHREAD $bwaref $outdir/linker/cutadapt.\${i}.R1.unpair.long.fastq.gz | $python $addMark R1 mem | $samtools sort -n -@ $NTHREAD -o $outdir/DNAalign/bwa\${i}.R1.unpair.long.bam -
@@ -176,22 +174,37 @@ for i in \$(seq \$nfile); do
     fi
     
     $python $get2pairFinal $outdir/DNAalign/bwa\${i}.all.bam $outdir/DNAalign/bwa\${i}.get2pair $mapq > $outdir/DNAalign/bwa\${i}.get2pair.log
-    # rm $outdir/DNAalign/bwa\${i}.all.bam
 
     $samtools fixmate -c -m $outdir/DNAalign/bwa\${i}.get2pair.pair.withlinker.bam - | $samtools sort -@ $NTHREAD -o $outdir/DNAalign/bwa\${i}.withlinker.bam -
     $samtools fixmate -c -m $outdir/DNAalign/bwa\${i}.get2pair.pair.withoutlinker.bam - | $samtools sort -@ $NTHREAD -o $outdir/DNAalign/bwa\${i}.withoutlinker.bam -
     $samtools view -@ $NTHREAD $outdir/DNAalign/bwa\${i}.get2pair.pair.withlinker.bam | wc -l | awk '{print "unique_mapping_reads_with_linker\t"\$1/2}' > $outdir/DNAalign/bwa\${i}.withlinker.readsnum
     $samtools view -@ $NTHREAD $outdir/DNAalign/bwa\${i}.get2pair.pair.withoutlinker.bam | wc -l | awk '{print "unique_mapping_reads_without_linker\t"\$1/2}' > $outdir/DNAalign/bwa\${i}.withoutlinker.readsnum
-    # rm $outdir/DNAalign/bwa\${i}.get2pair.pair.withlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.pair.withoutlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.single.withlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.single.withoutlinker.bam
 
     if [ ${barcodetranslate} == none ];then
-        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withlinker.bam -o DNAalign/bwa\${i}.withlinker.addBC.bam -s DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum
-        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withoutlinker.bam -o DNAalign/bwa\${i}.withoutlinker.addBC.bam -s DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum
+        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withlinker.bam -o DNAalign/bwa\${i}.withlinker.addBC.bam -s DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum && rm DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum
+        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withoutlinker.bam -o DNAalign/bwa\${i}.withoutlinker.addBC.bam -s DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum && rm DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum
     else
-        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withlinker.bam -o DNAalign/bwa\${i}.withlinker.addBC.bam -s DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum -t $barcodetranslate
-        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withoutlinker.bam -o DNAalign/bwa\${i}.withoutlinker.addBC.bam -s DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum -t $barcodetranslate
+        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withlinker.bam -o DNAalign/bwa\${i}.withlinker.addBC.bam -s DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum -t $barcodetranslate && rm DNAalign/bwa\${i}.withlinker.addBC.barcodeuniquereadsnum
+        $python $giveBC -sb DNAalign/STAR\${i}Aligned.out.bam -bb DNAalign/bwa\${i}.withoutlinker.bam -o DNAalign/bwa\${i}.withoutlinker.addBC.bam -s DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum -t $barcodetranslate && rm DNAalign/bwa\${i}.withoutlinker.addBC.barcodeuniquereadsnum
     fi
-    # rm $outdir/DNAalign/bwa\${i}.withlinker.bam $outdir/DNAalign/bwa\${i}.withoutlinker.bam
+    
+    rm $outdir/fastq/$outprefix.R1.\${i}.fastq $outdir/fastq/$outprefix.R2.\${i}.fastq
+    rm $outdir/linker/cutadapt.R1.\${i}.pair.tmp.fastq $outdir/trim/$outprefix.R1.\${i}.fastq
+    rm $outdir/linker/cutadapt.R1.\${i}.unpair.tmp.fastq $outdir/trim/$outprefix.R1.\${i}.unpair.fastq
+    rm $outdir/linker/cutadapt.R2.\${i}.pair.tmp.fastq $outdir/trim/$outprefix.R2.\${i}.fastq
+    rm $outdir/linker/cutadapt.R2.\${i}.unpair.tmp.fastq $outdir/trim/$outprefix.R2.\${i}.unpair.fastq
+    rm $outdir/linker/cutadapt.R1.\${i}.pair.Linker_info $outdir/linker/cutadapt.R1.\${i}.unpair.Linker_info $outdir/linker/cutadapt.R2.\${i}.pair.Linker_info $outdir/linker/cutadapt.R2.\${i}.unpair.Linker_info
+    rm $outdir/fastq/$outprefix.R1.\${i}.tmp.fastq $outdir/fastq/$outprefix.barcode.\${i}.fastq $outdir/DNAalign/STAR\${i}SJ.out.tab
+    rm $outdir/DNAalign/bwa\${i}.R1.pair.short.sai $outdir/DNAalign/bwa\${i}.R1.unpair.short.sai $outdir/DNAalign/bwa\${i}.R2.pair.short.sai $outdir/DNAalign/bwa\${i}.R2.unpair.short.sai
+    rm $outdir/DNAalign/bwa\${i}.R1.unpair.long.bam $outdir/DNAalign/bwa\${i}.R1.unpair.short.bam $outdir/DNAalign/bwa\${i}.R2.unpair.long.bam $outdir/DNAalign/bwa\${i}.R2.unpair.short.bam $outdir/DNAalign/bwa\${i}.R1.pair.long.bam $outdir/DNAalign/bwa\${i}.R1.pair.short.bam $outdir/DNAalign/bwa\${i}.R2.pair.long.bam $outdir/DNAalign/bwa\${i}.R2.pair.short.bam
+    rm $outdir/DNAalign/bwa\${i}.all.bam
+    rm $outdir/DNAalign/bwa\${i}.get2pair.pair.withlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.pair.withoutlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.single.withlinker.bam $outdir/DNAalign/bwa\${i}.get2pair.single.withoutlinker.bam
+    rm $outdir/DNAalign/bwa\${i}.withlinker.bam $outdir/DNAalign/bwa\${i}.withoutlinker.bam
+    rm -rf $outdir/DNAalign/STAR\${i}Solo.out
+    rm $outdir/DNAalign/STAR\${i}Log.progress.out $outdir/DNAalign/STAR\${i}Log.out $outdir/DNAalign/STAR\${i}Log.final.out
+    rm $outdir/linker/cutadapt.R1.\${i}.pair.cutadapt.stat $outdir/linker/cutadapt.R1.\${i}.unpair.cutadapt.stat $outdir/linker/cutadapt.R2.\${i}.pair.cutadapt.stat $outdir/linker/cutadapt.R2.\${i}.unpair.cutadapt.stat
+    rm $outdir/linker/cutadapt.\${i}.R1.pair.long.fastq.gz $outdir/linker/cutadapt.\${i}.R1.unpair.long.fastq.gz $outdir/linker/cutadapt.\${i}.R2.pair.long.fastq.gz $outdir/linker/cutadapt.\${i}.R2.unpair.long.fastq.gz $outdir/linker/cutadapt.\${i}.R1.pair.short.fastq.gz $outdir/linker/cutadapt.\${i}.R1.unpair.short.fastq.gz $outdir/linker/cutadapt.\${i}.R2.pair.short.fastq.gz $outdir/linker/cutadapt.\${i}.R2.unpair.short.fastq.gz
+
 done
 wait
 dur=\`echo "\$(date +%s.%N) - \$begin" | bc\`
@@ -220,12 +233,14 @@ awk '{if(/Unknown Library/){print "barcode_unique_mapping_reads_with_linker\t"\$
 awk '{if(/Unknown Library/){print "barcode_unique_mapping_rmPCR_reads_with_linker\t"\$8}}' DNAalign/$outprefix.withlinker.addBC.dedup.MarkDuplicates.txt > DNAalign/bwa.withlinker.addBC.barcodeuniquermPCRreadsnum
 $samtools sort -n -@ $NTHREAD -m 1000M -o DNAalign/$outprefix.withlinker.bam DNAalign/$outprefix.withlinker.addBC.dedup.bam
 $samtools sort -n -@ $NTHREAD -m 1000M -o DNAalign/$outprefix.withoutlinker.bam DNAalign/$outprefix.withoutlinker.addBC.dedup.bam
-$python $classPET DNAalign/$outprefix.withlinker.bam $contactMinDis DNAalign/$outprefix.withlinker.FRlt.bam DNAalign/$outprefix.withlinker.TANDEMlt.bam DNAalign/$outprefix.withlinker.scPET.bam DNAalign/$outprefix.withlinker.classPET.log > DNAalign/$outprefix.withlinker.classPET.num.log
+$python $classPET DNAalign/$outprefix.withlinker.bam $contactMinDis DNAalign/$outprefix.withlinker.FRlt.bam DNAalign/$outprefix.withlinker.TANDEM.bam DNAalign/$outprefix.withlinker.scPET.bam DNAalign/$outprefix.withlinker.classPET.log > DNAalign/$outprefix.withlinker.classPET.num.log
 $python ${classPETplot} DNAalign/$outprefix.withlinker.classPET.num.log &
-$python $classPET DNAalign/$outprefix.withoutlinker.bam $contactMinDis DNAalign/$outprefix.withoutlinker.FRlt.bam DNAalign/$outprefix.withoutlinker.TANDEMlt.bam DNAalign/$outprefix.withoutlinker.scPET.bam DNAalign/$outprefix.withoutlinker.classPET.log > DNAalign/$outprefix.withoutlinker.classPET.num.log
+$python $classPET DNAalign/$outprefix.withoutlinker.bam $contactMinDis DNAalign/$outprefix.withoutlinker.FRlt.bam DNAalign/$outprefix.withoutlinker.TANDEM.bam DNAalign/$outprefix.withoutlinker.scPET.bam DNAalign/$outprefix.withoutlinker.classPET.log > DNAalign/$outprefix.withoutlinker.classPET.num.log
 $python ${classPETplot} DNAalign/$outprefix.withoutlinker.classPET.num.log &
 $samtools merge -f -@ $NTHREAD -n -o DNAalign/$outprefix.FRlt.bam DNAalign/$outprefix.withoutlinker.FRlt.bam DNAalign/$outprefix.withlinker.FRlt.bam
 $samtools merge -f -@ $NTHREAD -n -o DNAalign/$outprefix.scPET.bam DNAalign/$outprefix.withoutlinker.scPET.bam DNAalign/$outprefix.withlinker.scPET.bam
+
+for i in \$(seq \$nfile); do rm $outdir/DNAalign/bwa\${i}.withoutlinker.addBC.bam $outdir/DNAalign/bwa\${i}.withlinker.addBC.bam $outdir/DNAalign/STAR\${i}Aligned.out.bam $outdir/DNAalign/STAR\${i}.barcodereadsnum $outdir/DNAalign/bwa\${i}.withlinker.readsnum $outdir/DNAalign/bwa\${i}.withoutlinker.readsnum $outdir/DNAalign/bwa\${i}.get2pair.log $outdir/linker/cutadapt.\${i}.linker.readsnum $outdir/linker/cutadapt.\${i}.splitReads.log $outdir/trim/$outprefix.\${i}.trim.readsnum; done
 
 dur=\`echo "\$(date +%s.%N) - \$begin" | bc\`
 printf "\$(date) merge align result and remove PCR finish: %.2f seconds\n" \$dur >> jobdir/$jobname.log
@@ -291,8 +306,8 @@ $python $statChAIRATAC fastq/$outprefix.readsnum DNAalign/STAR.barcodereadsnum t
 wait
 $bamCoverage -b DNAalign/$outprefix.scATAC.sorted.bam --minMappingQuality $mapq -o ATAC/${outprefix}.ATAC.bw -bs 5 -p ${NTHREAD}
 $bamCoverage -b DNAalign/$outprefix.scATAC.sorted.bam --minMappingQuality $mapq -o ATAC/${outprefix}.ATAC.RPKM.bw -bs 5 -p ${NTHREAD} --normalizeUsing RPKM
-$computeMatrix scale-regions -S ATAC/${outprefix}.ATAC.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName ATAC/${outprefix}.ATAC.RPKM.genebody.gz -p ${NTHREAD}
-$computeMatrix reference-point --referencePoint TSS -S ATAC/${outprefix}.ATAC.RPKM.bw -R ${genebed} -a 3000 -b 3000 --skipZeros --missingDataAsZero --outFileName ATAC/${outprefix}.ATAC.RPKM.geneTSS.gz -p ${NTHREAD}
+$computeMatrix scale-regions --quiet -S ATAC/${outprefix}.ATAC.RPKM.bw -R ${genebed} -a 3000 -b 3000 -m 3000 --skipZeros --missingDataAsZero --outFileName ATAC/${outprefix}.ATAC.RPKM.genebody.gz -p ${NTHREAD}
+$computeMatrix reference-point --quiet --referencePoint TSS -S ATAC/${outprefix}.ATAC.RPKM.bw -R ${genebed} -a 3000 -b 3000 --skipZeros --missingDataAsZero --outFileName ATAC/${outprefix}.ATAC.RPKM.geneTSS.gz -p ${NTHREAD}
 $plotHeatmap -m ATAC/${outprefix}.ATAC.RPKM.genebody.gz -out ATAC/${outprefix}.ATAC.RPKM.genebody.Heatmap.pdf &
 $plotProfile -m ATAC/${outprefix}.ATAC.RPKM.genebody.gz -out ATAC/${outprefix}.ATAC.RPKM.genebody.Profile.pdf &
 $plotHeatmap -m ATAC/${outprefix}.ATAC.RPKM.geneTSS.gz -out ATAC/${outprefix}.ATAC.RPKM.geneTSS.Heatmap.pdf &

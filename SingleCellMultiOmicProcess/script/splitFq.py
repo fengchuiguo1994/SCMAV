@@ -47,7 +47,7 @@ barcodelen = int(sys.argv[8]) # len
 if len(sys.argv) == 10:
     if sys.argv[9] == "Reverse":
         rcflag = True
-    elif sys.argv[6] == "Forward":
+    elif sys.argv[9] == "Forward":
         rcflag = False
     else:
         sys.exit("Error")

@@ -1,0 +1,94 @@
+#### The directory containing the executables
+ChAIRsiffile="/data/home/ruanlab/huangxingyu/scChAIR/ChAIR.sif"
+STARsiffile="/data/home/ruanlab/huangxingyu/Tools/STAR.sif"
+codepath="/data/home/ruanlab/huangxingyu/scChAIR/testdir/script"
+trimmomaticpath="/data/home/ruanlab/huangxingyu/Tools/Trimmomatic-0.39"
+
+###### system parameter
+# task: slurm local
+task=local 
+NTHREAD=10
+GB=100
+QUEUE=ruan_cpu2
+
+#### Experiment type (scRNA, scATAC, scHi-C, scChIATAC, scRNA+scATAC, scRNA+scHi-C, ChAIR)
+type="scRNA+scATAC"
+
+#### software, for scRNA: 10X (cellranger), STARsolo (STAR); for scATAC: 10X (cellranger-atac), chromap, custom; for scHi-C: custom; scChIATAC: custom; 
+# for scRNA+scATAC: 10X (cellranger-arc), custom; for scRNA+scHi-C: custom; for ChAIR: custom
+software="10X+custom"
+
+#### barcode UMI loci for RNA library
+# barcode start loci; barcode length; umi start loci; umi length; Forward or Reverse
+RNA_b_u="1 16 17 12 Forward" 
+RNAbarcodefile="/data/home/ruanlab/huangxingyu/scChAIR/testdir/barcodefile/RNA.737K-arc-v1.txt"
+#### barcode UMI loci for DNA library
+# barcode start loci; barcode length; Forward or Reverse
+DNA_b="1 16 Reverse"
+DNAbarcodefile="/data/home/ruanlab/huangxingyu/scChAIR/testdir/barcodefile/DNA.737K-arc-v1.txt"
+barcodetranslate="/data/home/ruanlab/huangxingyu/scChAIR/testdir/barcodefile/RNADNA.737K.barcodetranslate.txt" # convert DNA barcode to RNA barcode
+
+#### the chunk file size, just for DNA library
+# reads number < 100,000,000, recommend Nchunk=2000000; reads number < 500,000,000, recommend Nchunk=10000000; reads number > 1,000,000,000, recommend Nchunk=20000000 or more. It is recommended not to generate more than 100 chunk files.
+Nchunk=1000000
+
+#### mapping quality filter by samtools (unique mapping)
+mapq=20
+
+# contactMinDis also for Hi-C. Reads pairs with a distance greater than 1000bp are only considered contact
+contactMinDis=2000
+
+#### parameter for macs2 call ATAC peak
+# MACS2: hs=human, mm=mouse, dm=fruitfly
+glen=hs
+shiftsize=-75
+macsq=0.001
+peakext=150
+
+#### parameter for genome
+genome=hg38 # uniq ID
+barcoderef="${codepath}/../genome/genomeindex"
+GEXref=/data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0/genome/refdata-gex-GRCh38-2020-A # cellranger refer index
+bwaref=/data/home/ruanlab/software/20230205_pipeline/refs/hg38/bwa/hg38.fa # bwa refer index
+STARref=/data/home/ruanlab/huangxingyu/Tools/cellranger-7.1.0raw/stargenome/hg38_index # STAR refer index
+blacklist=/data/home/ruanlab/huangxingyu/scChAIR/testdir/blacklist/hg38.blacklist.bed
+genebed=/data/home/ruanlab/huangxingyu/scChAIR/testdir/geneinfo/hg38.info
+chrom_sizes=/data/home/ruanlab/huangxingyu/scChAIR/testdir/chromsize/hg38.fa.sizes # For build hic file by juicer, You can customize the order of the chromosomes, you also can set hg38/mm10
+
+#### software
+bwa="/data/home/ruanlab/huangxingyu/Tools/bwa-0.7.17/bwa"
+STARsolo="singularity run ${STARsiffile} STAR"
+cellranger="singularity run ${ChAIRsiffile} cellranger"
+Rscript="singularity exec ${ChAIRsiffile} Rscript"
+perl="singularity exec ${ChAIRsiffile} perl"
+python="singularity run ${ChAIRsiffile} python"
+pigz="singularity run ${ChAIRsiffile} pigz -f"
+gatk="singularity run ${ChAIRsiffile} gatk"
+bedtools="singularity run ${ChAIRsiffile} bedtools"
+samtools="singularity run ${ChAIRsiffile} samtools"
+juicer_tools="singularity run ${ChAIRsiffile} juicer_tools"
+cpu="singularity run ${ChAIRsiffile} cpu"
+bedClip="singularity run ${ChAIRsiffile} bedClip"
+bedGraphToBigWig="singularity run ${ChAIRsiffile} bedGraphToBigWig"
+bgzip="singularity run ${ChAIRsiffile} bgzip"
+sortBed="singularity run ${ChAIRsiffile} sortBed"
+ChiaSig="singularity run ${ChAIRsiffile} ChiaSig"
+tabix="singularity run ${ChAIRsiffile} tabix"
+macs2="singularity run ${ChAIRsiffile} macs2"
+bamCoverage="singularity run ${ChAIRsiffile} bamCoverage"
+alignmentSieve="singularity run ${ChAIRsiffile} alignmentSieve"
+computeMatrix="singularity run ${ChAIRsiffile} computeMatrix"
+plotHeatmap="singularity run ${ChAIRsiffile} plotHeatmap"
+plotProfile="singularity run ${ChAIRsiffile} plotProfile"
+pairtools="singularity run ${ChAIRsiffile} pairtools"
+
+splitFq=${codepath}/splitFq.py
+classPET=${codepath}/classPET.py
+giveBC=${codepath}/giveBC.py
+statRNA=${codepath}/statRNA.R
+classPETplot=${codepath}/classPETplot.py
+BWAmemFilter=${codepath}/BWAmemFilter.py
+bam2fragment=${codepath}/bam2fragment.py
+statATAC=${codepath}/statATAC.py
+sortHugeBed=${codepath}/sortHugeBed.sh
+getMat=${codepath}/getMat.py

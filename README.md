@@ -1,9 +1,11 @@
-## ChAIR library
+## ChAIR
 ![](img/tech.png)
-Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (ChIATAC-DNA and cDNA) or three library data (ChIATAC-DNA, ATAC-DNA and cDNA). 
+Schematics of ChAIR procedure to generate ChAIR-RNA, -ATAC, and -PET datasets in single cells. In ChAIR, crosslinked cells are manipulated through in situ restriction digestion, proximity ligation, and Tn5 tagmentation. The processed cells are then individually encapsulated into droplets using the 10x Genomics Multiome system, which barcodes DNA and RNA molecules simultaneously. The corresponding DNA and RNA information is obtained through DNA sequencing. ChAIR data contain two library data (ChIATAC-DNA and cDNA) or three library data (ChIATAC-DNA, ATAC-DNA and cDNA). If you use ChAIR, please cite :
+
+Chai, H., Huang, X., Xiong, G. et al. Tri-omic single-cell mapping of the 3D epigenome and transcriptome in whole mouse brains throughout the lifespan. Nat Methods 22, 994–1007 (2025). [https://doi.org/10.1038/s41592-025-02658-7](https://doi.org/10.1038/s41592-025-02658-7)
 
 ## scMAV
-single-cell multi-omic analysis and visualization tools. scMAV contain a <strong>[ChAIR-PIPEv2](ChAIR-PIPEv2)</strong>, <strong>[ChIA-PIPEv2](ChIA-PIPEv2)</strong>, <strong>[scMAV](scMAV)</strong>, <strong>ChAIR-View ([shiny version](ChAIR-View-shiny) and [local version](ChAIR-View-local))</strong> and <strong>[basic browser](basic-browser)</strong>. <br/>
+single-cell multi-omic analysis and visualization tools.
 
 The <strong>core components</strong> of data processing have been uploaded to DockerHub to avoid tedious software installation. <br/>
 **DockerHub Link: [https://hub.docker.com/repository/docker/fengchuiguo1994/scMAV:tagsname](https://hub.docker.com/repository/docker/fengchuiguo1994/scMAV)
@@ -195,3 +197,5 @@ ATAGGCGCTGGTTGCGTTGT
 ACAACGCAACCAGCGCCTAT
 ```
 
+perl -lane 'if($F[2] eq "gene"){if(/gene_id "(.+?)";.+?gene_type "(.+?)";.+?gene_name "(.+?)";/){print "$F[0]\t".($F[3]-1)."\t$F[4]\t$1\t.\t$F[6]\t$3\t$2"}}' refdata-gex-mm10-2020-A/genes/genes.gtf > mm10.info
+perl -lane 'if($F[2] eq "gene"){if(/gene_id "(.+?)";.+?gene_type "(.+?)";.+?gene_name "(.+?)";/){print "$F[0]\t".($F[3]-1)."\t$F[4]\t$1\t.\t$F[6]\t$3\t$2"}}' refdata-gex-GRCh38-2020-A/genes/genes.gtf > hg38.info
