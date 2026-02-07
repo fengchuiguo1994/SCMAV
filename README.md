@@ -171,4 +171,4 @@ python uploadSQLPro.py addTrack -i mouseBrainP365dir/mouseBrainP365.scPET.all.be
 ![](img/start.png)
 
 ###### 5. viewer
-![](img/overview.png){: height="800"}
+![](img/overview.png)
